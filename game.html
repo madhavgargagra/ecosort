@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sort It! Game — EcoSort</title>
+  <meta name="description" content="Play the EcoSort sorting game! Drag waste items into the correct bins or race against the clock in speed quiz mode. Earn Eco Credits while you learn." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#52B788" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="EcoSort Home">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </a>
+      <div class="nav-links">
+        <a href="scan.html"      class="nav-link">Scan</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="game.html"      class="nav-link active">Game</a>
+        <a href="myths.html"     class="nav-link">Myths</a>
+        <a href="rewards.html"   class="nav-link">Rewards</a>
+      </div>
+      <div class="nav-actions">
+        <a href="rewards.html" class="eco-credits-badge" id="nav-credits" title="Your Eco Credits">
+          <span class="credits-icon">🪙</span>
+          <span class="credits-count" id="nav-credits-count">0</span>
+          <span class="credits-label">credits</span>
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <h1 class="page-hero-title">🎮 Sort It! Game</h1>
+      <p class="page-hero-sub">Sort waste items correctly and earn Eco Credits — pick your mode!</p>
+    </div>
+  </div>
+
+  <!-- ===== MAIN ===== -->
+  <main class="page-main" id="game-main">
+
+    <!-- MODE SELECT SCREEN -->
+    <div class="mode-select" id="mode-select">
+      <div class="mode-cards">
+
+        <div class="mode-card" id="mode-drag-card">
+          <div class="mode-card-icon">🗑️</div>
+          <h2 class="mode-card-title">Drag &amp; Drop</h2>
+          <p class="mode-card-desc">
+            Waste items fall from the top. Drag them into the correct bin before they hit the floor!
+            You have <strong>3 lives</strong> — don't let items fall into the wrong bin.
+          </p>
+          <ul class="mode-card-features">
+            <li>⏱️ 60-second rounds</li>
+            <li>❤️ 3 lives per round</li>
+            <li>🔥 Combo multipliers</li>
+            <li>🪙 +5 credits per correct sort</li>
+          </ul>
+          <button class="btn btn-primary mode-start-btn" id="start-drag-btn" style="width:100%;justify-content:center;margin-top:auto">
+            Play Drag &amp; Drop
+          </button>
+        </div>
+
+        <div class="mode-card" id="mode-quiz-card">
+          <div class="mode-card-icon">⚡</div>
+          <h2 class="mode-card-title">Speed Quiz</h2>
+          <p class="mode-card-desc">
+            A waste item appears on screen. Tap the correct bin as fast as possible!
+            Answer faster for a higher <strong>speed multiplier</strong>.
+          </p>
+          <ul class="mode-card-features">
+            <li>🎯 15 items per round</li>
+            <li>⚡ Speed multiplier up to 3×</li>
+            <li>💡 Hint system (costs points)</li>
+            <li>🪙 +3–9 credits per correct answer</li>
+          </ul>
+          <button class="btn btn-primary mode-start-btn" id="start-quiz-btn" style="width:100%;justify-content:center;margin-top:auto;background:linear-gradient(135deg,#9B5DE5,#F15BB5)">
+            Play Speed Quiz
+          </button>
+        </div>
+
+      </div>
+
+      <!-- High Scores -->
+      <div class="highscores-card">
+        <h3 class="highscores-title">🏆 Your Best Scores</h3>
+        <div class="highscores-grid">
+          <div class="highscore-item">
+            <span class="highscore-mode">🗑️ Drag &amp; Drop</span>
+            <span class="highscore-val" id="hs-drag">—</span>
+          </div>
+          <div class="highscore-item">
+            <span class="highscore-mode">⚡ Speed Quiz</span>
+            <span class="highscore-val" id="hs-quiz">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         DRAG & DROP GAME ARENA
+    ================================================================ -->
+    <div class="game-arena" id="arena-drag" hidden>
+
+      <!-- HUD -->
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="hud-label">Score</span>
+          <span class="hud-value" id="drag-score">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Combo</span>
+          <span class="hud-value combo-display" id="drag-combo">×1</span>
+        </div>
+        <div class="hud-item lives-hud">
+          <span class="hud-label">Lives</span>
+          <span class="hud-value" id="drag-lives">❤️❤️❤️</span>
+        </div>
+        <div class="hud-item timer-hud">
+          <span class="hud-label">Time</span>
+          <span class="hud-value timer-val" id="drag-timer">60</span>
+        </div>
+        <button class="btn btn-ghost hud-quit" id="drag-quit">✕ Quit</button>
+      </div>
+
+      <!-- Drop Zone: The bins row -->
+      <div class="bins-row" id="bins-row">
+        <div class="bin-target" id="bin-recyclable"    data-cat="recyclable"   droptarget="true">
+          <div class="bin-icon">♻️</div>
+          <div class="bin-label">Recyclable</div>
+          <div class="bin-sublabel">Blue Bin</div>
+        </div>
+        <div class="bin-target" id="bin-compostable"   data-cat="compostable"  droptarget="true">
+          <div class="bin-icon">🌱</div>
+          <div class="bin-label">Compost</div>
+          <div class="bin-sublabel">Green Bin</div>
+        </div>
+        <div class="bin-target" id="bin-landfill"      data-cat="landfill"     droptarget="true">
+          <div class="bin-icon">🗑️</div>
+          <div class="bin-label">Landfill</div>
+          <div class="bin-sublabel">Black Bin</div>
+        </div>
+        <div class="bin-target" id="bin-hazardous"     data-cat="hazardous"    droptarget="true">
+          <div class="bin-icon">⚠️</div>
+          <div class="bin-label">Hazardous</div>
+          <div class="bin-sublabel">Special</div>
+        </div>
+        <div class="bin-target" id="bin-ewaste"        data-cat="ewaste"       droptarget="true">
+          <div class="bin-icon">💻</div>
+          <div class="bin-label">E-Waste</div>
+          <div class="bin-sublabel">Tech Drop</div>
+        </div>
+      </div>
+
+      <!-- Falling items canvas area -->
+      <div class="fall-zone" id="fall-zone">
+        <!-- Items injected by JS -->
+      </div>
+
+    </div>
+
+    <!-- ================================================================
+         SPEED QUIZ GAME ARENA
+    ================================================================ -->
+    <div class="game-arena quiz-arena" id="arena-quiz" hidden>
+
+      <!-- HUD -->
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="hud-label">Score</span>
+          <span class="hud-value" id="quiz-score">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Multiplier</span>
+          <span class="hud-value combo-display" id="quiz-multiplier">×1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Question</span>
+          <span class="hud-value" id="quiz-progress">1 / 15</span>
+        </div>
+        <div class="hud-item timer-hud">
+          <span class="hud-label">Speed</span>
+          <div class="speed-bar-wrap">
+            <div class="speed-bar" id="quiz-speed-bar"></div>
+          </div>
+        </div>
+        <button class="btn btn-ghost hud-quit" id="quiz-quit">✕ Quit</button>
+      </div>
+
+      <!-- Item Display -->
+      <div class="quiz-item-card" id="quiz-item-card">
+        <div class="quiz-item-icon" id="quiz-item-icon">🍌</div>
+        <div class="quiz-item-name" id="quiz-item-name">Banana Peel</div>
+        <div class="quiz-item-hint" id="quiz-item-hint" hidden></div>
+        <button class="hint-btn" id="quiz-hint-btn" title="Use hint (-3 pts)">💡 Hint</button>
+      </div>
+
+      <!-- Answer Buttons (4 bins shown at random) -->
+      <div class="quiz-answers" id="quiz-answers">
+        <!-- 4-5 bin buttons injected by JS -->
+      </div>
+
+      <!-- Feedback flash -->
+      <div class="quiz-feedback" id="quiz-feedback" hidden></div>
+
+    </div>
+
+    <!-- ================================================================
+         GAME OVER SCREEN
+    ================================================================ -->
+    <div class="game-over" id="game-over" hidden>
+      <div class="game-over-card">
+        <div class="game-over-emoji" id="game-over-emoji">🎉</div>
+        <h2 class="game-over-title" id="game-over-title">Round Over!</h2>
+        <div class="game-over-score-wrap">
+          <div class="game-over-score" id="game-over-score">0</div>
+          <div class="game-over-score-label">points</div>
+        </div>
+        <div class="game-over-stats" id="game-over-stats">
+          <!-- Injected by JS -->
+        </div>
+        <div class="game-over-credits" id="game-over-credits">
+          <span>🪙</span>
+          <span id="game-over-credits-earned">+0 Eco Credits Earned!</span>
+        </div>
+        <div class="game-over-actions">
+          <button class="btn btn-primary" id="play-again-btn">🔄 Play Again</button>
+          <button class="btn btn-secondary" id="change-mode-btn">🎮 Change Mode</button>
+          <a href="rewards.html" class="btn btn-ghost">🪙 Redeem Credits</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="scan.html"      class="footer-nav-link">Scan</a>
+        <a href="dashboard.html" class="footer-nav-link">Dashboard</a>
+        <a href="game.html"      class="footer-nav-link">Game</a>
+        <a href="myths.html"     class="footer-nav-link">Myths</a>
+        <a href="rewards.html"   class="footer-nav-link">Rewards</a>
+      </nav>
+      <p class="footer-credit">Built for HackJKLU · Circular Economy &amp; Sustainability Track</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/waste-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/page-game.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eco Credits &amp; Rewards — EcoSort</title>
+  <meta name="description" content="Redeem your Eco Credits for real community rewards — free garbage collection, tree planting, e-waste pickup, and more." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#52B788" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/rewards.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="EcoSort Home">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </a>
+      <div class="nav-links">
+        <a href="scan.html"      class="nav-link">Scan</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="game.html"      class="nav-link">Game</a>
+        <a href="myths.html"     class="nav-link">Myths</a>
+        <a href="rewards.html"   class="nav-link active">Rewards</a>
+      </div>
+      <div class="nav-actions">
+        <div class="eco-credits-badge" id="nav-credits" title="Your Eco Credits">
+          <span class="credits-icon">🪙</span>
+          <span class="credits-count" id="nav-credits-count">0</span>
+          <span class="credits-label">credits</span>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <h1 class="page-hero-title">🪙 Eco Credits &amp; Rewards</h1>
+      <p class="page-hero-sub">Earn credits by sorting correctly. Redeem for real community rewards.</p>
+    </div>
+  </div>
+
+  <main class="page-main">
+    <div class="rewards-section" id="rewards-section">
+      <div class="rewards-container">
+
+        <!-- Credits Summary -->
+        <div class="credits-summary-card">
+          <div class="credits-summary-left">
+            <div class="credits-big-num" id="credits-big-num">0</div>
+            <div class="credits-big-label">Eco Credits Available</div>
+          </div>
+          <div class="credits-summary-right">
+            <div class="credits-progress-info">
+              <span id="credits-next-reward-label">Next reward at 80 credits</span>
+              <div class="credits-progress-bar-wrap">
+                <div class="credits-progress-bar" id="credits-progress-bar"></div>
+              </div>
+            </div>
+            <div class="credits-how-earn">
+              <p>📸 Scan an item → <strong>+10 credits</strong></p>
+              <p>✅ Correct sort (confirmed) → <strong>+5 bonus</strong></p>
+              <p>🔥 Daily streak bonus → <strong>+20 credits</strong></p>
+              <p>🏆 Unlock a badge → <strong>+50 credits</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="rewards-empty" id="rewards-empty" hidden>
+          <div style="text-align:center;padding:var(--sp-10)">
+            <div style="font-size:3rem;margin-bottom:var(--sp-4)">🌱</div>
+            <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:var(--sp-3)">Earn your first credits!</h3>
+            <p style="color:var(--text-secondary);margin-bottom:var(--sp-5)">Start scanning waste items to earn Eco Credits and unlock rewards.</p>
+            <a href="scan.html" class="btn btn-primary">📸 Go Scan Now</a>
+          </div>
+        </div>
+
+        <!-- Reward Marketplace -->
+        <h3 class="rewards-marketplace-title">🎁 Reward Marketplace</h3>
+        <div class="rewards-grid" id="rewards-grid"></div>
+
+        <!-- Redemption History -->
+        <div class="redemption-history">
+          <h3 class="redemption-title">📋 Redemption History</h3>
+          <div id="redemption-list">
+            <p class="redemption-empty">No redemptions yet. Earn credits and redeem for rewards!</p>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="text-align:center;padding:var(--sp-4) 0">
+          <a href="scan.html" class="btn btn-primary" style="padding:var(--sp-4) var(--sp-10)">
+            📸 Earn More Credits
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="scan.html"      class="footer-nav-link">Scan</a>
+        <a href="dashboard.html" class="footer-nav-link">Dashboard</a>
+        <a href="game.html"      class="footer-nav-link">Game</a>
+        <a href="myths.html"     class="footer-nav-link">Myths</a>
+        <a href="rewards.html"   class="footer-nav-link">Rewards</a>
+      </nav>
+      <p class="footer-credit">Built for HackJKLU · Circular Economy &amp; Sustainability Track</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/waste-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/impact.js"></script>
+  <script src="js/rewards.js"></script>
+  <script src="js/page-rewards.js"></script>
+</body>
+</html>

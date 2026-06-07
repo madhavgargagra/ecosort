@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recycling Myth Buster — EcoSort</title>
+  <meta name="description" content="Think you know your recycling? Bust 15 common myths about waste sorting and learn what really goes where. Earn Eco Credits for every correct answer!" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/myths.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="EcoSort Home">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </a>
+      <div class="nav-links">
+        <a href="scan.html"      class="nav-link">Scan</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="game.html"      class="nav-link">Game</a>
+        <a href="myths.html"     class="nav-link active">Myths</a>
+        <a href="rewards.html"   class="nav-link">Rewards</a>
+      </div>
+      <div class="nav-actions">
+        <a href="rewards.html" class="eco-credits-badge" id="nav-credits" title="Your Eco Credits">
+          <span class="credits-icon">🪙</span>
+          <span class="credits-count" id="nav-credits-count">0</span>
+          <span class="credits-label">credits</span>
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <h1 class="page-hero-title">🧠 Recycling Myth Buster</h1>
+      <p class="page-hero-sub">30 myths in our database — 15 chosen randomly each game. Earn Eco Credits for each correct answer!</p>
+    </div>
+  </div>
+
+  <!-- ===== MAIN ===== -->
+  <main class="page-main">
+
+    <!-- Intro stats -->
+    <div class="myths-intro">
+      <div class="myth-stat-card">
+        <span class="myth-stat-icon">🧠</span>
+        <div class="myth-stat-val">30</div>
+        <div class="myth-stat-lbl">Myths in pool</div>
+      </div>
+      <div class="myth-stat-card">
+        <span class="myth-stat-icon">🎢</span>
+        <div class="myth-stat-val">15</div>
+        <div class="myth-stat-lbl">Per game (random)</div>
+      </div>
+      <div class="myth-stat-card">
+        <span class="myth-stat-icon">🪙</span>
+        <div class="myth-stat-val">+45</div>
+        <div class="myth-stat-lbl">Max credits</div>
+      </div>
+    </div>
+
+    <!-- ── QUIZ SECTION ── -->
+    <section id="myth-quiz-section">
+      <div class="myth-quiz-wrap">
+
+        <!-- Progress row -->
+        <div class="myth-progress-wrap">
+          <div class="myth-progress-track">
+            <div class="myth-progress-fill" id="myth-progress-bar"></div>
+          </div>
+          <span class="myth-progress-label" id="myth-q-num">1 / 15</span>
+          <span class="myth-score-display">🏆 <span id="myth-score">0</span> pts</span>
+        </div>
+
+        <!-- Myth card -->
+        <div class="myth-card" id="myth-card">
+          <span class="myth-category-badge" id="myth-category">📄 Paper</span>
+          <span class="myth-label">TRUE or FALSE?</span>
+          <p class="myth-statement" id="myth-statement">"Statement goes here"</p>
+
+          <p class="myth-keyboard-hint">Press <kbd class="kbd">T</kbd> for True &nbsp;·&nbsp; <kbd class="kbd">F</kbd> for False</p>
+
+          <!-- Answer buttons -->
+          <div class="myth-answers">
+            <button class="myth-answer-btn myth-true" id="myth-true-btn">
+              ✅ TRUE
+            </button>
+            <button class="myth-answer-btn myth-false" id="myth-false-btn">
+              ❌ FALSE
+            </button>
+          </div>
+
+          <!-- Explanation (hidden until answered) -->
+          <div class="myth-explanation" id="myth-explanation" hidden>
+            <div class="myth-exp-title">The truth is…</div>
+            <p class="myth-exp-text" id="myth-exp-text"></p>
+          </div>
+
+          <!-- Fun fact -->
+          <div class="myth-fun-fact" id="myth-fun-fact" hidden>
+            <span id="myth-fun-fact-text"></span>
+          </div>
+        </div>
+
+        <!-- Next button -->
+        <div class="myth-next-wrap">
+          <button class="btn btn-primary" id="myth-next-btn" hidden>Next Myth →</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RESULTS SECTION ── -->
+    <section id="myth-result-section" hidden>
+      <div class="myth-result-wrap">
+        <div class="myth-result-card">
+          <span class="result-emoji" id="result-emoji">🎉</span>
+          <div class="result-grade" id="result-grade">Eco Champion!</div>
+
+          <div class="result-score-big" id="result-score">0</div>
+          <div class="result-score-sub">points scored</div>
+
+          <div class="result-stats-row">
+            <div class="result-stat-pill">✅ Correct: <strong id="result-correct">0</strong></div>
+            <div class="result-stat-pill">❌ Wrong: <strong id="result-wrong">0</strong></div>
+            <div class="result-stat-pill">🎯 Accuracy: <strong id="result-accuracy">0%</strong></div>
+          </div>
+
+          <div class="result-credits-badge">
+            <span>🪙</span>
+            <span id="result-credits">+0 Eco Credits Earned!</span>
+          </div>
+
+          <div class="result-actions">
+            <button class="btn btn-primary" id="myth-restart-btn">🔄 Play Again</button>
+            <a href="scan.html" class="btn btn-secondary">📸 Scan Waste</a>
+            <a href="rewards.html" class="btn btn-ghost">🪙 Redeem Credits</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="scan.html"      class="footer-nav-link">Scan</a>
+        <a href="dashboard.html" class="footer-nav-link">Dashboard</a>
+        <a href="game.html"      class="footer-nav-link">Game</a>
+        <a href="myths.html"     class="footer-nav-link">Myths</a>
+        <a href="rewards.html"   class="footer-nav-link">Rewards</a>
+      </nav>
+      <p class="footer-credit">Built for HackJKLU · Circular Economy &amp; Sustainability Track</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/page-myths.js"></script>
+</body>
+</html>

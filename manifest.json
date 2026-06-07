@@ -1,0 +1,45 @@
+{
+  "name": "EcoSort — AI Waste Classification",
+  "short_name": "EcoSort",
+  "description": "Scan waste items with AI, sort smarter, and earn real community rewards. 100% in-browser — no sign-up needed.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0A0F0D",
+  "theme_color": "#52B788",
+  "orientation": "any",
+  "lang": "en",
+  "categories": ["education", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan Waste",
+      "short_name": "Scan",
+      "description": "Classify a waste item using AI",
+      "url": "./scan.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Play Sorting Game",
+      "short_name": "Game",
+      "description": "Play the drag-and-drop sorting game",
+      "url": "./game.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "My Dashboard",
+      "short_name": "Dashboard",
+      "description": "See your environmental impact stats",
+      "url": "./dashboard.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    }
+  ],
+  "screenshots": []
+}

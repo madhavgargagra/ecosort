@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoSort — AI Waste Classification & Recycling Guide</title>
+  <meta name="description" content="EcoSort uses AI to identify household waste and tell you exactly which bin it belongs in. Earn Eco Credits for real community rewards." />
+  <meta name="keywords" content="waste sorting, recycling, AI, sustainability, eco, compost, household waste" />
+  <meta property="og:title" content="EcoSort — AI Waste Classification" />
+  <meta property="og:description" content="Scan your waste. Sort smarter. Earn rewards." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#52B788" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="EcoSort Home">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </a>
+      <div class="nav-links">
+        <a href="scan.html"      class="nav-link" id="nav-scan">Scan</a>
+        <a href="dashboard.html" class="nav-link" id="nav-dashboard">Dashboard</a>
+        <a href="game.html"      class="nav-link" id="nav-game">Game</a>
+        <a href="myths.html"     class="nav-link" id="nav-myths">Myths</a>
+        <a href="rewards.html"   class="nav-link" id="nav-rewards">Rewards</a>
+      </div>
+      <div class="nav-actions">
+        <a href="rewards.html" class="eco-credits-badge" id="nav-credits" title="Your Eco Credits">
+          <span class="credits-icon">🪙</span>
+          <span class="credits-count" id="nav-credits-count">0</span>
+          <span class="credits-label">credits</span>
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero-section" id="hero">
+    <div class="hero-bg-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge"><span>🤖 AI-Powered · No signup needed</span></div>
+      <h1 class="hero-title">
+        Sort Waste
+        <span class="hero-title-highlight">Smarter</span>
+        with AI
+      </h1>
+      <p class="hero-subtitle">
+        Point your camera at any waste item. Our AI identifies it instantly and
+        tells you exactly which bin it belongs in — plus earns you
+        <strong>Eco Credits</strong> for real community rewards.
+      </p>
+      <div class="hero-actions">
+        <a href="scan.html" class="btn btn-primary" id="hero-scan-btn">
+          <span>📸</span> Scan Your Waste
+        </a>
+        <a href="dashboard.html" class="btn btn-ghost">
+          <span>📊</span> My Impact
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num" id="hero-total-scans">0</span>
+          <span class="hero-stat-label">Items Sorted</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num" id="hero-co2">0.0</span>
+          <span class="hero-stat-label">kg CO₂ Saved</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num" id="hero-credits">0</span>
+          <span class="hero-stat-label">Eco Credits</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-phone-mockup">
+        <div class="phone-screen">
+          <div class="phone-scan-overlay">
+            <div class="scan-corner tl"></div>
+            <div class="scan-corner tr"></div>
+            <div class="scan-corner bl"></div>
+            <div class="scan-corner br"></div>
+            <div class="scan-line-anim"></div>
+            <div class="phone-result-chip">
+              <span class="chip-icon">♻️</span>
+              <span class="chip-text">Recyclable</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMMUNITY COUNTER ===== -->
+  <section class="community-section" id="community">
+    <div class="community-inner">
+      <div class="section-header">
+        <h2 class="section-title">🌍 Community Impact</h2>
+        <p class="section-subtitle">EcoSort users worldwide are making a difference — every sorted item counts</p>
+      </div>
+      <div class="community-grid">
+        <div class="community-stat-card">
+          <div class="community-stat-icon">📳</div>
+          <div class="community-stat-num" id="comm-items">0</div>
+          <div class="community-stat-label">Items Sorted Globally</div>
+        </div>
+        <div class="community-stat-card">
+          <div class="community-stat-icon">🌍</div>
+          <div class="community-stat-num" id="comm-co2">0</div>
+          <div class="community-stat-label">kg CO₂ Prevented</div>
+        </div>
+        <div class="community-stat-card">
+          <div class="community-stat-icon">🧁</div>
+          <div class="community-stat-num" id="comm-users">0</div>
+          <div class="community-stat-label">Eco Champions</div>
+        </div>
+        <div class="community-stat-card">
+          <div class="community-stat-icon">🪙</div>
+          <div class="community-stat-num" id="comm-credits">0</div>
+          <div class="community-stat-label">Credits Redeemed</div>
+        </div>
+      </div>
+      <p class="community-note">⚡ Live-updating · Includes your personal contribution · Simulated global impact</p>
+
+      <!-- PWA Install button (hidden until installable) -->
+      <div style="text-align:center;margin-top:var(--sp-4)">
+        <button class="btn btn-secondary" id="pwa-install-btn" hidden onclick="EcoUtils.showInstallPrompt()">
+          📲 Install EcoSort App
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-section" id="how">
+    <div class="how-inner">
+      <div class="section-header">
+        <h2 class="section-title">How EcoSort Works</h2>
+        <p class="section-subtitle">Three steps to smarter sorting</p>
+      </div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-icon">📸</div>
+          <h3 class="how-step-title">1. Scan or Search</h3>
+          <p class="how-step-desc">Upload a photo, use your camera, or search by name for any waste item.</p>
+        </div>
+        <div class="how-step-arrow">→</div>
+        <div class="how-step">
+          <div class="how-step-icon">🤖</div>
+          <h3 class="how-step-title">2. AI Classifies</h3>
+          <p class="how-step-desc">Our AI identifies the item and tells you the correct bin, tips, and fun facts.</p>
+        </div>
+        <div class="how-step-arrow">→</div>
+        <div class="how-step">
+          <div class="how-step-icon">🪙</div>
+          <h3 class="how-step-title">3. Earn &amp; Redeem</h3>
+          <p class="how-step-desc">Earn Eco Credits for every scan. Redeem for free garbage pickup, trees planted, and more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CATEGORIES PREVIEW ===== -->
+  <section class="categories-section" id="categories">
+    <div class="section-header">
+      <h2 class="section-title">8 Waste Categories Covered</h2>
+      <p class="section-subtitle">From everyday recyclables to hazardous household items</p>
+    </div>
+    <div class="categories-grid">
+      <div class="category-card" style="--cat-color:#00B4D8">
+        <span class="cat-icon">♻️</span>
+        <span class="cat-name">Recyclable</span>
+        <span class="cat-desc">Bottles, cans, paper, cardboard</span>
+      </div>
+      <div class="category-card" style="--cat-color:#52B788">
+        <span class="cat-icon">🌱</span>
+        <span class="cat-name">Compostable</span>
+        <span class="cat-desc">Food scraps, yard waste, organic</span>
+      </div>
+      <div class="category-card" style="--cat-color:#8D99AE">
+        <span class="cat-icon">🗑️</span>
+        <span class="cat-name">General Waste</span>
+        <span class="cat-desc">Styrofoam, chip bags, diapers</span>
+      </div>
+      <div class="category-card" style="--cat-color:#FFB703">
+        <span class="cat-icon">⚠️</span>
+        <span class="cat-name">Hazardous</span>
+        <span class="cat-desc">Batteries, paint, chemicals</span>
+      </div>
+      <div class="category-card" style="--cat-color:#9B5DE5">
+        <span class="cat-icon">💻</span>
+        <span class="cat-name">E-Waste</span>
+        <span class="cat-desc">Phones, cables, electronics</span>
+      </div>
+      <div class="category-card" style="--cat-color:#F4845F">
+        <span class="cat-icon">👕</span>
+        <span class="cat-name">Textiles</span>
+        <span class="cat-desc">Clothing, shoes, fabric</span>
+      </div>
+      <div class="category-card" style="--cat-color:#6A994E">
+        <span class="cat-icon">🏗️</span>
+        <span class="cat-name">Bulky Waste</span>
+        <span class="cat-desc">Furniture, construction debris</span>
+      </div>
+      <div class="category-card" style="--cat-color:#EF233C">
+        <span class="cat-icon">💊</span>
+        <span class="cat-name">Medical</span>
+        <span class="cat-desc">Medicines, sharps, syringes</span>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:var(--sp-10)">
+      <a href="scan.html" class="btn btn-primary" style="padding:var(--sp-4) var(--sp-10);font-size:1rem">
+        📸 Start Scanning Now
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="scan.html"      class="footer-nav-link">Scan</a>
+        <a href="dashboard.html" class="footer-nav-link">Dashboard</a>
+        <a href="game.html"      class="footer-nav-link">Game</a>
+        <a href="myths.html"     class="footer-nav-link">Myths</a>
+        <a href="rewards.html"   class="footer-nav-link">Rewards</a>
+
+      </nav>
+      <p class="footer-tagline">Sort smarter. Live greener. Earn rewards.</p>
+      <p class="footer-credit">Built for HackJKLU · Circular Economy &amp; Sustainability Track</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/page-home.js"></script>
+</body>
+</html>

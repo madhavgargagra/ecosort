@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Eco Dashboard — EcoSort</title>
+  <meta name="description" content="Track your cumulative environmental impact — CO₂ saved, water conserved, trees equivalent, and more. See your badges and scan history." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#52B788" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="EcoSort Home">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </a>
+      <div class="nav-links">
+        <a href="scan.html"      class="nav-link">Scan</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="game.html"      class="nav-link">Game</a>
+        <a href="myths.html"     class="nav-link">Myths</a>
+        <a href="rewards.html"   class="nav-link">Rewards</a>
+      </div>
+      <div class="nav-actions">
+        <a href="rewards.html" class="eco-credits-badge" id="nav-credits" title="Your Eco Credits">
+          <span class="credits-icon">🪙</span>
+          <span class="credits-count" id="nav-credits-count">0</span>
+          <span class="credits-label">credits</span>
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <h1 class="page-hero-title">📊 My Eco Dashboard</h1>
+      <p class="page-hero-sub">Your cumulative environmental impact from sorting correctly</p>
+    </div>
+  </div>
+
+  <main class="page-main">
+
+    <!-- ===== DASHBOARD CONTENT ===== -->
+    <div class="dashboard-section" id="dashboard-section">
+      <div class="dashboard-container">
+
+        <!-- Empty state (shown when no scans yet) -->
+        <div class="dashboard-empty" id="dashboard-empty" hidden>
+          <div class="dashboard-empty-icon">🌱</div>
+          <h2 class="dashboard-empty-title">Nothing sorted yet!</h2>
+          <p class="dashboard-empty-desc">Head over to the Scan page to classify your first waste item and start building your eco impact.</p>
+          <a href="scan.html" class="btn btn-primary" style="margin-top:var(--sp-5)">📸 Start Scanning</a>
+        </div>
+
+        <!-- Impact Ring Cards -->
+        <div class="impact-grid" id="impact-grid">
+          <div class="impact-card">
+            <div class="impact-ring-wrap">
+              <svg class="impact-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="ring-bg" cx="50" cy="50" r="40" />
+                <circle class="ring-fill co2-ring" cx="50" cy="50" r="40" id="co2-ring-fill" />
+              </svg>
+              <div class="impact-ring-content">
+                <span class="impact-value" id="dash-co2">0.0</span>
+                <span class="impact-unit">kg</span>
+              </div>
+            </div>
+            <p class="impact-label">CO₂ Saved</p>
+            <p class="impact-equivalent" id="co2-equiv">= 0 km not driven</p>
+          </div>
+
+          <div class="impact-card">
+            <div class="impact-ring-wrap">
+              <svg class="impact-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="ring-bg" cx="50" cy="50" r="40" />
+                <circle class="ring-fill water-ring" cx="50" cy="50" r="40" id="water-ring-fill" />
+              </svg>
+              <div class="impact-ring-content">
+                <span class="impact-value" id="dash-water">0</span>
+                <span class="impact-unit">L</span>
+              </div>
+            </div>
+            <p class="impact-label">Water Saved</p>
+            <p class="impact-equivalent" id="water-equiv">= 0 showers</p>
+          </div>
+
+          <div class="impact-card">
+            <div class="impact-ring-wrap">
+              <svg class="impact-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="ring-bg" cx="50" cy="50" r="40" />
+                <circle class="ring-fill trees-ring" cx="50" cy="50" r="40" id="trees-ring-fill" />
+              </svg>
+              <div class="impact-ring-content">
+                <span class="impact-value" id="dash-trees">0.0</span>
+                <span class="impact-unit">🌳</span>
+              </div>
+            </div>
+            <p class="impact-label">Trees Equivalent</p>
+            <p class="impact-equivalent" id="trees-equiv">= 0 days of oxygen</p>
+          </div>
+
+          <div class="impact-card">
+            <div class="impact-ring-wrap">
+              <svg class="impact-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="ring-bg" cx="50" cy="50" r="40" />
+                <circle class="ring-fill energy-ring" cx="50" cy="50" r="40" id="energy-ring-fill" />
+              </svg>
+              <div class="impact-ring-content">
+                <span class="impact-value" id="dash-energy">0</span>
+                <span class="impact-unit">Wh</span>
+              </div>
+            </div>
+            <p class="impact-label">Energy Saved</p>
+            <p class="impact-equivalent" id="energy-equiv">= 0 hrs light bulb</p>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Total Sorted</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-value" id="stat-streak">0</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🪙</div>
+            <div class="stat-value" id="stat-credits">0</div>
+            <div class="stat-label">Eco Credits</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value" id="stat-level">Beginner</div>
+            <div class="stat-label">Your Level</div>
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="breakdown-card">
+          <h3 class="breakdown-title">Category Breakdown</h3>
+          <div class="breakdown-bars" id="breakdown-bars">
+            <p style="color:var(--text-muted);font-size:0.9rem;text-align:center;padding:var(--sp-6)">Start scanning to see your category breakdown!</p>
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="badges-section">
+          <h3 class="badges-title">🏅 Badges</h3>
+          <div class="badges-grid" id="badges-grid"></div>
+        </div>
+
+        <!-- Scan History -->
+        <div class="history-section">
+          <h3 class="history-title">🕓 Recent Scans</h3>
+          <div class="history-list" id="history-list">
+            <p class="history-empty">No scans yet. <a href="scan.html" style="color:var(--accent-green)">Start sorting!</a></p>
+          </div>
+        </div>
+
+        <!-- Share Impact Card -->
+        <div style="text-align:center;padding:var(--sp-4) 0 0">
+          <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text-secondary);margin-bottom:var(--sp-3)">📤 Share Your Impact</h3>
+          <div style="display:flex;gap:var(--sp-3);justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-primary" id="share-impact-btn">
+              📥 Download Impact Card
+            </button>
+            <button class="btn btn-secondary" id="copy-impact-btn">
+              📋 Copy to Clipboard
+            </button>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:var(--sp-2)">Generate a beautiful 1200×630 PNG you can share on social media</p>
+        </div>
+
+        <!-- CTA -->
+        <div style="text-align:center;padding:var(--sp-4) 0">
+          <a href="scan.html" class="btn btn-primary" style="padding:var(--sp-4) var(--sp-10)">
+            📸 Scan More Items
+          </a>
+          <a href="rewards.html" class="btn btn-ghost" style="margin-left:var(--sp-3);padding:var(--sp-4) var(--sp-8)">
+            🪙 Redeem Credits
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="scan.html"      class="footer-nav-link">Scan</a>
+        <a href="dashboard.html" class="footer-nav-link">Dashboard</a>
+        <a href="game.html"      class="footer-nav-link">Game</a>
+        <a href="myths.html"     class="footer-nav-link">Myths</a>
+        <a href="rewards.html"   class="footer-nav-link">Rewards</a>
+      </nav>
+      <p class="footer-credit">Built for HackJKLU · Circular Economy &amp; Sustainability Track</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/waste-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/impact.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/page-dashboard.js"></script>
+</body>
+</html>

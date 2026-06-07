@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scan Waste — EcoSort</title>
+  <meta name="description" content="Upload a photo, use your camera, or search by name. EcoSort AI classifies your waste instantly and tells you the right bin." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#52B788" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- TensorFlow.js loaded only on Scan page -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/scanner.css" />
+  <link rel="stylesheet" href="css/results.css" />
+  <link rel="stylesheet" href="css/timeline.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="EcoSort Home">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </a>
+      <div class="nav-links">
+        <a href="scan.html"      class="nav-link active">Scan</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="game.html"      class="nav-link">Game</a>
+        <a href="myths.html"     class="nav-link">Myths</a>
+        <a href="rewards.html"   class="nav-link">Rewards</a>
+      </div>
+      <div class="nav-actions">
+        <a href="rewards.html" class="eco-credits-badge" id="nav-credits" title="Your Eco Credits">
+          <span class="credits-icon">🪙</span>
+          <span class="credits-count" id="nav-credits-count">0</span>
+          <span class="credits-label">credits</span>
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <h1 class="page-hero-title">📸 Scan Your Waste</h1>
+      <p class="page-hero-sub">Upload a photo, use your camera, or search by item name</p>
+    </div>
+  </div>
+
+  <!-- ===== SCANNER SECTION ===== -->
+  <main class="page-main">
+    <div class="scanner-section" id="scanner-section">
+      <div class="scanner-container">
+
+        <!-- Input Tabs -->
+        <div class="scanner-tabs" role="tablist">
+          <button class="scanner-tab active" id="tab-upload" role="tab" aria-selected="true" aria-controls="panel-upload">
+            📁 Upload Photo
+          </button>
+          <button class="scanner-tab" id="tab-camera" role="tab" aria-selected="false" aria-controls="panel-camera">
+            📷 Camera
+          </button>
+          <button class="scanner-tab" id="tab-search" role="tab" aria-selected="false" aria-controls="panel-search">
+            🔍 Search Item
+          </button>
+        </div>
+
+        <!-- Upload Panel -->
+        <div class="scanner-panel active" id="panel-upload" role="tabpanel" aria-labelledby="tab-upload">
+          <div class="upload-zone" id="upload-zone" tabindex="0" aria-label="Upload waste image">
+            <div class="upload-zone-inner">
+              <div class="upload-icon">📂</div>
+              <p class="upload-title">Drop your image here</p>
+              <p class="upload-subtitle">or click to browse · PNG, JPG, WEBP</p>
+              <button class="btn btn-secondary" id="upload-btn">Choose File</button>
+            </div>
+            <input type="file" id="file-input" accept="image/*" aria-hidden="true" />
+          </div>
+          <div class="uploaded-preview" id="uploaded-preview" hidden>
+            <img id="preview-img" alt="Uploaded waste item preview" />
+            <button class="btn btn-outline" id="change-img-btn">Change Image</button>
+          </div>
+        </div>
+
+        <!-- Camera Panel -->
+        <div class="scanner-panel" id="panel-camera" role="tabpanel" aria-labelledby="tab-camera">
+          <div class="camera-container" id="camera-container">
+            <video id="camera-video" autoplay playsinline muted aria-label="Camera viewfinder"></video>
+            <div class="camera-overlay">
+              <div class="camera-corner tl"></div>
+              <div class="camera-corner tr"></div>
+              <div class="camera-corner bl"></div>
+              <div class="camera-corner br"></div>
+            </div>
+            <canvas id="camera-canvas" hidden></canvas>
+          </div>
+          <div class="camera-actions">
+            <button class="btn btn-primary" id="start-camera-btn">📷 Start Camera</button>
+            <button class="btn btn-capture" id="capture-btn" hidden aria-label="Capture photo">
+              <span class="capture-ring"></span>
+            </button>
+            <button class="btn btn-outline" id="stop-camera-btn" hidden>Stop Camera</button>
+          </div>
+          <div class="camera-permission-error" id="camera-error" hidden>
+            <p>📵 Camera access denied. Please allow camera permission or use the Upload tab.</p>
+          </div>
+        </div>
+
+        <!-- Search Panel -->
+        <div class="scanner-panel" id="panel-search" role="tabpanel" aria-labelledby="tab-search">
+          <div class="search-container">
+            <div class="search-input-wrap">
+              <span class="search-icon-label">🔍</span>
+              <input
+                type="text"
+                id="search-input"
+                class="search-input"
+                placeholder="e.g. plastic bottle, banana peel, old phone…"
+                autocomplete="off"
+                aria-label="Search for a waste item"
+                aria-autocomplete="list"
+                aria-controls="search-suggestions"
+              />
+              <button class="voice-search-btn" id="voice-search-btn" title="Voice search — click and speak" aria-label="Search by voice">🎤</button>
+              <button class="btn btn-primary" id="search-btn">Find</button>
+            </div>
+            <ul class="search-suggestions" id="search-suggestions" role="listbox" hidden></ul>
+          </div>
+          <div class="popular-items">
+            <p class="popular-label">Popular searches:</p>
+            <div class="popular-chips" id="popular-chips">
+              <button class="popular-chip" data-item="plastic bottle">🍶 Plastic Bottle</button>
+              <button class="popular-chip" data-item="banana peel">🍌 Banana Peel</button>
+              <button class="popular-chip" data-item="newspaper">📰 Newspaper</button>
+              <button class="popular-chip" data-item="battery">🔋 Battery</button>
+              <button class="popular-chip" data-item="old phone">📱 Old Phone</button>
+              <button class="popular-chip" data-item="glass bottle">🍾 Glass Bottle</button>
+              <button class="popular-chip" data-item="pizza box">🍕 Pizza Box</button>
+              <button class="popular-chip" data-item="t-shirt">👕 T-Shirt</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Classify Button -->
+        <div class="classify-action" id="classify-action" hidden>
+          <button class="btn btn-classify" id="classify-btn">
+            <span class="classify-icon">🤖</span>
+            <span class="classify-text">Analyze Waste</span>
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div class="analyzing-state" id="analyzing-state" hidden>
+          <div class="analyzing-spinner">
+            <div class="spinner-ring"></div>
+            <span class="spinner-emoji">🔬</span>
+          </div>
+          <p class="analyzing-text">AI is analyzing your item…</p>
+          <p class="analyzing-sub" id="analyzing-sub">Loading model…</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RESULTS SECTION ===== -->
+    <div class="results-section" id="results-section" hidden>
+      <div class="section-header">
+        <h2 class="section-title">🎯 Classification Result</h2>
+      </div>
+      <div class="results-container">
+
+        <!-- Main Result Card -->
+        <div class="result-card" id="result-card">
+          <div class="result-header">
+            <div class="result-category-icon" id="result-icon">♻️</div>
+            <div class="result-category-info">
+              <div class="result-category-badge" id="result-badge">Recyclable</div>
+              <div class="result-item-name" id="result-item-name">Item</div>
+            </div>
+            <div class="result-bin-indicator" id="result-bin">
+              <span class="bin-color-dot" id="bin-dot"></span>
+              <span id="bin-name">Blue Bin</span>
+            </div>
+          </div>
+
+          <div class="result-confidence" id="result-confidence-wrap">
+            <span class="confidence-label">AI Confidence</span>
+            <div class="confidence-bar-wrap">
+              <div class="confidence-bar" id="confidence-bar"></div>
+            </div>
+            <span class="confidence-pct" id="confidence-pct">0%</span>
+          </div>
+
+          <div class="result-tips">
+            <h3 class="tips-title">📋 Sorting Tips</h3>
+            <p id="result-tips-text"></p>
+          </div>
+
+          <div class="result-mistakes" id="result-mistakes-wrap">
+            <h3 class="mistakes-title">⚠️ Common Mistakes</h3>
+            <p id="result-mistakes-text"></p>
+          </div>
+
+          <div class="result-fact">
+            <div class="fact-icon">💡</div>
+            <p id="result-fact-text"></p>
+          </div>
+
+          <div class="credits-earned-banner" id="credits-banner">
+            <div class="credits-earned-icon">🪙</div>
+            <div class="credits-earned-info">
+              <span class="credits-earned-amount" id="credits-earned-amount">+15</span>
+              <span class="credits-earned-label">Eco Credits Earned!</span>
+            </div>
+            <div class="credits-total-display">
+              Total: <strong id="credits-total-display">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decomposition Timeline -->
+        <div class="timeline-card" id="timeline-card">
+          <h3 class="timeline-title">⏳ Decomposition Timeline</h3>
+          <p class="timeline-subtitle">If this item ends up in a landfill…</p>
+          <div class="timeline-visual" id="timeline-visual"></div>
+          <div class="timeline-item-label" id="timeline-item-label"></div>
+        </div>
+
+        <!-- Environmental Impact of THIS Item -->
+        <div class="impact-preview-card" id="impact-preview-card">
+          <h3 class="impact-preview-title">🌍 Sorting This Correctly…</h3>
+          <div class="impact-preview-grid" id="impact-preview-grid"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="result-actions">
+          <button class="btn btn-primary" id="scan-another-btn">📸 Scan Another</button>
+          <a href="dashboard.html" class="btn btn-secondary">📊 My Dashboard</a>
+          <a href="rewards.html"   class="btn btn-ghost">🪙 Redeem Credits</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">EcoSort</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="scan.html"      class="footer-nav-link">Scan</a>
+        <a href="dashboard.html" class="footer-nav-link">Dashboard</a>
+        <a href="game.html"      class="footer-nav-link">Game</a>
+        <a href="myths.html"     class="footer-nav-link">Myths</a>
+        <a href="rewards.html"   class="footer-nav-link">Rewards</a>
+      </nav>
+      <p class="footer-credit">Built for HackJKLU · Circular Economy &amp; Sustainability Track</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Badge Unlocked Overlay -->
+  <div class="badge-overlay" id="badge-overlay" hidden>
+    <div class="badge-overlay-card">
+      <div class="badge-overlay-icon" id="badge-overlay-icon">🏅</div>
+      <h3 class="badge-overlay-title">Badge Unlocked!</h3>
+      <p class="badge-overlay-name" id="badge-overlay-name"></p>
+      <p class="badge-overlay-desc" id="badge-overlay-desc"></p>
+      <div class="badge-overlay-credits">+50 🪙 Eco Credits</div>
+      <button class="btn btn-primary" id="badge-overlay-close">Awesome!</button>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/waste-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/impact.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/page-scan.js"></script>
+</body>
+</html>
