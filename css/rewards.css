@@ -1,0 +1,357 @@
+/* ============================================================
+   EcoSort — Rewards Section Styles
+   rewards.css
+   ============================================================ */
+
+.rewards-section {
+  max-width: 1100px;
+  margin: 0 auto var(--sp-16);
+}
+
+.rewards-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+
+/* ── CREDITS SUMMARY ── */
+.credits-summary-card {
+  background: linear-gradient(135deg, #1A2E28, #0D1E18);
+  border: 1px solid rgba(82, 183, 136, 0.2);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-8);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-8);
+  align-items: center;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .credits-summary-card {
+  background: linear-gradient(135deg, #D4EDE4, #E8F5EE);
+  border-color: rgba(0, 100, 70, 0.2);
+}
+
+.credits-summary-card::before {
+  content: '🪙';
+  position: absolute;
+  font-size: 12rem;
+  opacity: 0.04;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.credits-summary-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.credits-big-num {
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #FFD166, #FFB703);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.credits-big-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.credits-summary-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.credits-progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+#credits-next-reward-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.credits-progress-bar-wrap {
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+[data-theme="light"] .credits-progress-bar-wrap {
+  background: rgba(0,0,0,0.08);
+}
+
+.credits-progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #FFD166, #FFB703);
+  width: 0%;
+  transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.credits-how-earn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.credits-how-earn p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.credits-how-earn strong { color: var(--accent-green); }
+
+/* ── REWARDS MARKETPLACE ── */
+.rewards-marketplace-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sp-5);
+}
+
+/* ── REWARD CARD ── */
+.reward-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.reward-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-green);
+}
+
+.reward-card.redeemed {
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+.reward-card-header {
+  padding: var(--sp-6);
+  background: linear-gradient(135deg, var(--reward-bg-from, #1A2E28), var(--reward-bg-to, #0D1E18));
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  position: relative;
+}
+
+[data-theme="light"] .reward-card-header {
+  background: linear-gradient(135deg, var(--reward-bg-light-from, #D4EDE4), var(--reward-bg-light-to, #E8F5EE));
+}
+
+.reward-card-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.reward-card-title-wrap {
+  flex: 1;
+}
+
+.reward-card-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.reward-card-org {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.reward-card-tag {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  background: rgba(82, 183, 136, 0.15);
+  border: 1px solid rgba(82, 183, 136, 0.3);
+  border-radius: var(--radius-full);
+  padding: 2px var(--sp-3);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-green);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.reward-card-body {
+  padding: var(--sp-5) var(--sp-6);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.reward-card-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.reward-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.reward-cost {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--color-hazardous);
+}
+
+.reward-cost-icon { font-size: 1.1rem; }
+
+.reward-cost-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+.reward-redeem-btn {
+  padding: var(--sp-2) var(--sp-5);
+  background: linear-gradient(135deg, var(--accent), var(--accent-green));
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.reward-redeem-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.reward-redeem-btn:disabled,
+.reward-redeem-btn.insufficient {
+  background: var(--bg-base);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.reward-redeem-btn.already-redeemed {
+  background: var(--accent-green-glow);
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+  cursor: default;
+}
+
+/* ── REDEMPTION HISTORY ── */
+.redemption-history {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-6);
+}
+
+.redemption-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-5);
+}
+
+.redemption-empty {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: var(--sp-8);
+}
+
+.redemption-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--bg-base);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin-bottom: var(--sp-3);
+}
+
+.redemption-item-icon { font-size: 1.5rem; }
+
+.redemption-item-info { flex: 1; }
+
+.redemption-item-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.redemption-item-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.redemption-item-cost {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-medical);
+  font-size: 0.9rem;
+}
+
+.redemption-code {
+  font-size: 0.75rem;
+  font-family: monospace;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--sp-2);
+  color: var(--accent-green);
+  cursor: pointer;
+}
+
+.redemption-code:hover { border-color: var(--accent-green); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .credits-summary-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .credits-big-num { font-size: 3.5rem; }
+  .rewards-grid { grid-template-columns: 1fr; }
+}

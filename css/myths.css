@@ -1,0 +1,390 @@
+/* ============================================================
+   EcoSort — myths.css
+   Recycling Myth Buster page styles
+   ============================================================ */
+
+/* ── MYTH INTRO STATS ── */
+.myths-intro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4);
+  max-width: 700px;
+  margin: 0 auto var(--sp-8);
+}
+
+.myth-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.myth-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.myth-stat-icon { font-size: 2rem; margin-bottom: var(--sp-2); display: block; }
+.myth-stat-val  {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-green);
+}
+.myth-stat-lbl  { font-size: 0.8rem; color: var(--text-muted); }
+
+/* ── QUIZ SECTION ── */
+.myth-quiz-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-6);
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Progress bar */
+.myth-progress-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.myth-progress-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.myth-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent));
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.myth-progress-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.myth-score-display {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-green);
+  white-space: nowrap;
+}
+
+/* The main myth card */
+.myth-card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-10);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  animation: mythCardIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes mythCardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.myth-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent));
+}
+
+.myth-card.reveal {
+  border-color: var(--accent-green-glow);
+  box-shadow: 0 0 30px rgba(82,183,136,0.1);
+}
+
+.myth-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: var(--sp-1) var(--sp-4);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--sp-5);
+}
+
+.myth-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: var(--sp-3);
+}
+
+.myth-statement {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: var(--sp-6);
+}
+
+/* Keyboard hint */
+.myth-keyboard-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-5);
+}
+
+.kbd {
+  display: inline-block;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* ── ANSWER BUTTONS ── */
+.myth-answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+.myth-answer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: var(--sp-5) var(--sp-6);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--border-color);
+  background: var(--bg-surface);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.myth-answer-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.myth-true:hover:not(:disabled) {
+  border-color: var(--accent-green);
+  background: rgba(82,183,136,0.12);
+  color: var(--accent-green);
+}
+
+.myth-false:hover:not(:disabled) {
+  border-color: #F15BB5;
+  background: rgba(241,91,181,0.12);
+  color: #F15BB5;
+}
+
+.myth-answer-btn:disabled { cursor: default; transform: none; opacity: 0.8; }
+
+.myth-answer-btn.correct {
+  border-color: var(--accent-green);
+  background: rgba(82,183,136,0.2);
+  color: var(--accent-green);
+  animation: correctPop 0.3s ease;
+}
+
+.myth-answer-btn.wrong {
+  border-color: #F15BB5;
+  background: rgba(241,91,181,0.15);
+  color: #F15BB5;
+  animation: wrongShake 0.4s ease;
+}
+
+@keyframes correctPop {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
+}
+
+@keyframes wrongShake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-6px); }
+  75%       { transform: translateX(6px); }
+}
+
+/* ── EXPLANATION AREA ── */
+.myth-explanation {
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  margin-top: var(--sp-5);
+  animation: fadeSlideIn 0.3s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.myth-exp-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-2);
+}
+
+.myth-exp-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.myth-fun-fact {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: rgba(255,183,3,0.08);
+  border: 1px solid rgba(255,183,3,0.25);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  color: var(--color-hazardous);
+}
+
+/* ── NEXT BUTTON ── */
+.myth-next-wrap {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: var(--sp-4);
+}
+
+#myth-next-btn {
+  animation: fadeSlideIn 0.25s ease;
+}
+
+/* ── RESULTS SCREEN ── */
+.myth-result-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.myth-result-card {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-12) var(--sp-10);
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-emoji {
+  font-size: 4.5rem;
+  display: block;
+  margin-bottom: var(--sp-4);
+}
+
+.result-grade {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--sp-3);
+}
+
+.result-score-big {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: var(--sp-2);
+}
+
+.result-score-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: var(--sp-6); }
+
+.result-stats-row {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-5);
+}
+
+.result-stat-pill {
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: var(--sp-2) var(--sp-5);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.result-stat-pill strong { color: var(--text-primary); font-family: var(--font-display); }
+
+.result-credits-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-hazardous);
+  background: rgba(255,183,3,0.1);
+  border: 1px solid rgba(255,183,3,0.3);
+  border-radius: var(--radius-full);
+  padding: var(--sp-3) var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+.result-actions {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .myths-intro { grid-template-columns: 1fr; }
+  .myth-statement { font-size: 1.2rem; }
+  .myth-answers { grid-template-columns: 1fr; }
+  .myth-card { padding: var(--sp-6); }
+  .myth-result-card { padding: var(--sp-8) var(--sp-6); }
+  .result-score-big { font-size: 3.5rem; }
+}
