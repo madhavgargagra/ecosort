@@ -2,11 +2,20 @@
 
 > **HackJKLU Year 1 · Circular Economy & Sustainability Track**
 
+[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-madhavgargagra.github.io/ecosort-52B788?style=for-the-badge)](https://madhavgargagra.github.io/ecosort/)
+
 EcoSort uses a **client-side AI model** to identify household waste and instantly tell you which bin it belongs in. Sort smarter, play sorting games, bust recycling myths, track your environmental impact, and earn **Eco Credits** to redeem for 18 real community rewards — all running 100% in your browser with zero signup.
 
 ---
 
-## 🚀 Quick Start
+## 🌐 Live Demo
+
+**👉 https://madhavgargagra.github.io/ecosort/**
+
+> Works best in **Chrome** or **Edge**. Voice search and PWA install require these browsers.
+
+
+## 🚀 Run Locally
 
 No build step or installation required. Just start a local web server:
 
