@@ -112,6 +112,25 @@
   margin-top: -var(--sp-2);
 }
 
+.upload-paste-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: var(--sp-1);
+  opacity: 0.7;
+}
+
+.upload-paste-hint kbd {
+  display: inline-block;
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 0 var(--border-color);
+}
+
 #file-input {
   position: absolute;
   inset: 0;
@@ -140,13 +159,59 @@
 }
 
 /* ── CAMERA ── */
+#panel-camera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
 .camera-container {
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #000;
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
   aspect-ratio: 4/3;
   max-height: 380px;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ── Camera idle placeholder ── */
+.camera-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  background: var(--bg-base);
+  z-index: 2;
+}
+
+.camera-placeholder-icon {
+  font-size: 3.5rem;
+  opacity: 0.5;
+  animation: cameraFloat 3s ease-in-out infinite;
+}
+
+.camera-placeholder-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.camera-placeholder-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+@keyframes cameraFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
 }
 
 #camera-video {
@@ -471,3 +536,143 @@
   50%       { box-shadow: 0 0 0 8px rgba(241,91,181,0); }
 }
 
+
+/* ══════════════════════════════════════════════════════════
+   GEMINI API KEY BANNERS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Setup banner (shown when no key is saved) ── */
+.gemini-setup-banner {
+  background: linear-gradient(135deg,
+    rgba(82,183,136,0.08) 0%,
+    rgba(82,183,136,0.03) 100%);
+  border: 1px solid rgba(82,183,136,0.25);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5) var(--sp-6);
+  margin: 0 auto var(--sp-4);
+  max-width: 860px;
+  width: calc(100% - var(--sp-8));
+}
+
+.gemini-setup-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.gemini-setup-left {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  flex: 1;
+  min-width: 220px;
+}
+
+.gemini-setup-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.gemini-setup-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.gemini-setup-sub {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.gemini-setup-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.gemini-key-input {
+  background: var(--bg-input, rgba(255,255,255,0.06));
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  outline: none;
+  width: 240px;
+  transition: border-color var(--transition-fast);
+}
+
+.gemini-key-input:focus {
+  border-color: var(--accent-green);
+}
+
+.gemini-get-key-link {
+  font-size: 0.82rem;
+  color: var(--accent-green);
+  text-decoration: underline;
+  white-space: nowrap;
+  transition: opacity var(--transition-fast);
+}
+
+.gemini-get-key-link:hover { opacity: 0.75; }
+
+/* ── Active banner (shown when key is saved) ── */
+.gemini-active-banner {
+  background: linear-gradient(135deg,
+    rgba(82,183,136,0.15) 0%,
+    rgba(82,183,136,0.06) 100%);
+  border: 1px solid rgba(82,183,136,0.35);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-3) var(--sp-6);
+  margin: 0 auto var(--sp-4);
+  max-width: 860px;
+  width: calc(100% - var(--sp-8));
+}
+
+.gemini-active-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  font-size: 0.875rem;
+  color: var(--accent-green);
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.gemini-clear-btn {
+  background: none;
+  border: 1px solid rgba(82,183,136,0.3);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gemini-clear-btn:hover {
+  background: rgba(239,35,60,0.1);
+  border-color: rgba(239,35,60,0.4);
+  color: #EF233C;
+}
+
+/* ── Small button variant ── */
+.btn.btn-sm {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .gemini-setup-inner  { flex-direction: column; align-items: flex-start; }
+  .gemini-setup-right  { width: 100%; }
+  .gemini-key-input    { width: 100%; }
+  .gemini-active-inner { flex-direction: column; align-items: flex-start; }
+}
