@@ -76,6 +76,24 @@ function initUploadTab() {
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith('image/')) handleFileSelected(file);
   });
+
+  // Ctrl+V paste from clipboard
+  document.addEventListener('paste', e => {
+    // Only trigger on upload tab
+    if (ScanState.currentTab !== 'upload') return;
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          handleFileSelected(file);
+          showToast('success', '📋 Image pasted! Click Analyze to classify.');
+        }
+        break;
+      }
+    }
+  });
 }
 
 async function handleFileSelected(file) {
@@ -200,25 +218,37 @@ async function handleClassify() {
     let wasteItem = null;
     let confidence = 1.0;
     let method = 'search';
+    let geminiItemName = null;
 
     if (ScanState.pendingItemName) {
+      // ── Text search path (unchanged)
       wasteItem = findWasteItem(ScanState.pendingItemName);
       if (subEl) subEl.textContent = 'Looking up item…';
       await EcoUtils.sleep(500);
 
     } else if (ScanState.pendingImageEl) {
+      // ── Image path: hybrid classifier (Gemini → MobileNet)
       method = 'ml';
       const result = await EcoClassifier.classifyImage(
         ScanState.pendingImageEl,
         msg => { if (subEl) subEl.textContent = msg; }
       );
+
       if (result.wasteItem) {
-        wasteItem = result.wasteItem;
-        confidence = result.confidence;
+        wasteItem    = result.wasteItem;
+        confidence   = result.confidence;
+        geminiItemName = result.geminiItemName || null;
+      } else if (result.source === 'gemini') {
+        // Gemini said it's not a recognisable waste item
+        if (subEl) subEl.textContent = '🤔 Gemini: not a waste item';
+        await EcoUtils.sleep(800);
+        wasteItem  = await promptManualCategory('Not identified by AI');
+        confidence = 0.6;
       } else {
+        // MobileNet low confidence
         if (subEl) subEl.textContent = `Low confidence: "${result.topClass}"`;
         await EcoUtils.sleep(800);
-        wasteItem = await promptManualCategory(result.topClass);
+        wasteItem  = await promptManualCategory(result.topClass);
         confidence = 0.55;
       }
     }
@@ -233,7 +263,7 @@ async function handleClassify() {
 
     await EcoUtils.sleep(300);
     document.getElementById('analyzing-state').hidden = true;
-    showResults(wasteItem, confidence, method);
+    showResults(wasteItem, confidence, method, geminiItemName, result);
 
   } catch (err) {
     console.error('EcoSort: Classification failed', err);
@@ -313,7 +343,7 @@ function promptManualCategory(detectedClass) {
 /* ────────────────────────────────────────────────────────────
    SHOW RESULTS
    ──────────────────────────────────────────────────────────── */
-function showResults(item, confidence, method) {
+function showResults(item, confidence, method, geminiItemName = null, result = null) {
   const cat = WASTE_CATEGORIES[item.category];
   const creditsBase  = 10;
   const creditsBonus = confidence >= 0.7 ? 5 : 0;
@@ -328,7 +358,11 @@ function showResults(item, confidence, method) {
 
   setText('result-icon',         cat.icon);
   setText('result-badge',        cat.label);
-  setText('result-item-name',    item.name);
+  // If Gemini identified a more specific name, show it alongside the DB name
+  const displayName = geminiItemName && geminiItemName !== item.name
+    ? `${geminiItemName} (${item.name})`
+    : item.name;
+  setText('result-item-name', displayName);
   setText('bin-name',            cat.bin);
 
   const binDot = document.getElementById('bin-dot');
@@ -353,6 +387,12 @@ function showResults(item, confidence, method) {
   setText('result-fact-text',     item.funFact);
   setText('credits-earned-amount', `+${creditsTotal}`);
   setText('credits-total-display', state.ecoCredits);
+
+  // Show Gemini reasoning if available
+  showReasoning(result?.reasoning || null, method);
+
+  // Reset feedback UI
+  initFeedback(displayName, item);
 
   // Timeline
   EcoTimeline.renderDecompositionTimeline(
@@ -389,6 +429,94 @@ function showResults(item, confidence, method) {
 function setText(id, val) {
   const el = document.getElementById(id);
   if (el) el.textContent = val;
+}
+
+/* ────────────────────────────────────────────────────────────
+   AI REASONING DISPLAY
+   ──────────────────────────────────────────────────────────── */
+function showReasoning(reasoning, method) {
+  const wrap = document.getElementById('result-reasoning');
+  const text = document.getElementById('reasoning-text');
+  if (!wrap || !text) return;
+  if (reasoning && method === 'ml') {
+    text.textContent = reasoning;
+    wrap.hidden = false;
+  } else {
+    wrap.hidden = true;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   USER FEEDBACK LOOP
+   ──────────────────────────────────────────────────────────── */
+function initFeedback(detectedName, item) {
+  const feedbackEl    = document.getElementById('result-feedback');
+  const correctionEl  = document.getElementById('feedback-correction');
+  const yesBtn        = document.getElementById('feedback-yes');
+  const noBtn         = document.getElementById('feedback-no');
+  const corrInput     = document.getElementById('correction-input');
+  const corrSubmit    = document.getElementById('correction-submit');
+  const corrSuggest   = document.getElementById('correction-suggestions');
+
+  // Reset state
+  if (feedbackEl)   { feedbackEl.hidden = false; feedbackEl.dataset.done = ''; }
+  if (correctionEl)  correctionEl.hidden = true;
+  if (corrInput)     corrInput.value = '';
+  if (corrSuggest)   corrSuggest.hidden = true;
+
+  yesBtn?.addEventListener('click', () => {
+    if (feedbackEl.dataset.done) return;
+    feedbackEl.dataset.done = '1';
+    feedbackEl.innerHTML = '<p class="feedback-thanks">🎉 Thanks! This helps improve future scans.</p>';
+  }, { once: true });
+
+  noBtn?.addEventListener('click', () => {
+    if (feedbackEl.dataset.done) return;
+    if (correctionEl) correctionEl.hidden = false;
+    feedbackEl.querySelector('.feedback-buttons').hidden = true;
+  }, { once: true });
+
+  // Autocomplete suggestions in correction input
+  corrInput?.addEventListener('input', () => {
+    const q = corrInput.value.trim();
+    if (!q || q.length < 2) { corrSuggest.hidden = true; return; }
+    const suggestions = getSearchSuggestions(q, 5);
+    if (!suggestions.length) { corrSuggest.hidden = true; return; }
+    corrSuggest.innerHTML = '';
+    corrSuggest.hidden = false;
+    for (const s of suggestions) {
+      const li = document.createElement('li');
+      li.textContent = `${WASTE_CATEGORIES[s.category].icon} ${s.name}`;
+      li.style.cssText = 'padding:8px 14px;cursor:pointer;list-style:none;font-size:0.9rem;';
+      li.addEventListener('mousedown', () => {
+        corrInput.value = s.name;
+        corrSuggest.hidden = true;
+        saveCorrection(detectedName, s.name, s.category, feedbackEl, correctionEl);
+      });
+      corrSuggest.appendChild(li);
+    }
+  });
+
+  corrSubmit?.addEventListener('click', () => {
+    const q = corrInput?.value?.trim();
+    if (!q) return;
+    const found = findWasteItem(q);
+    if (found) {
+      saveCorrection(detectedName, found.name, found.category, feedbackEl, correctionEl);
+    } else {
+      showToast('error', `"${q}" not found in database. Try a different name.`);
+    }
+  });
+}
+
+function saveCorrection(detectedName, correctName, correctCategory, feedbackEl, correctionEl) {
+  EcoClassifier.saveFeedbackCorrection(detectedName, correctName, correctCategory);
+  if (correctionEl) correctionEl.hidden = true;
+  if (feedbackEl) {
+    feedbackEl.dataset.done = '1';
+    feedbackEl.innerHTML = `<p class="feedback-thanks">💾 Correction saved! AI will remember "${correctName}" next time.</p>`;
+  }
+  showToast('success', `💾 Correction saved — AI will remember this.`);
 }
 
 /* ────────────────────────────────────────────────────────────
