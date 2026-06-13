@@ -86,6 +86,7 @@
               <p class="upload-title">Drop your image here</p>
               <p class="upload-subtitle">or click to browse · PNG, JPG, WEBP</p>
               <button class="btn btn-secondary" id="upload-btn">Choose File</button>
+              <p class="upload-paste-hint">📋 or press <kbd>Ctrl+V</kbd> to paste from clipboard</p>
             </div>
             <input type="file" id="file-input" accept="image/*" aria-hidden="true" />
           </div>
@@ -98,8 +99,14 @@
         <!-- Camera Panel -->
         <div class="scanner-panel" id="panel-camera" role="tabpanel" aria-labelledby="tab-camera">
           <div class="camera-container" id="camera-container">
-            <video id="camera-video" autoplay playsinline muted aria-label="Camera viewfinder"></video>
-            <div class="camera-overlay">
+            <!-- Idle placeholder (shown before camera starts) -->
+            <div class="camera-placeholder" id="camera-placeholder">
+              <div class="camera-placeholder-icon">📷</div>
+              <p class="camera-placeholder-title">Camera Ready</p>
+              <p class="camera-placeholder-sub">Click "Start Camera" below to begin scanning</p>
+            </div>
+            <video id="camera-video" autoplay playsinline muted aria-label="Camera viewfinder" hidden></video>
+            <div class="camera-overlay" style="opacity:0">
               <div class="camera-corner tl"></div>
               <div class="camera-corner tr"></div>
               <div class="camera-corner bl"></div>
@@ -201,6 +208,31 @@
               <div class="confidence-bar" id="confidence-bar"></div>
             </div>
             <span class="confidence-pct" id="confidence-pct">0%</span>
+          </div>
+
+          <!-- AI Reasoning (shown for Gemini results) -->
+          <div class="result-reasoning" id="result-reasoning" hidden>
+            <span class="reasoning-icon">🧠</span>
+            <p class="reasoning-text" id="reasoning-text"></p>
+          </div>
+
+          <!-- User Feedback -->
+          <div class="result-feedback" id="result-feedback">
+            <p class="feedback-label">Was this correct?</p>
+            <div class="feedback-buttons">
+              <button class="feedback-btn feedback-yes" id="feedback-yes">✅ Yes, correct!</button>
+              <button class="feedback-btn feedback-no"  id="feedback-no">❌ No, fix it</button>
+            </div>
+          </div>
+
+          <!-- Correction Form (shown when user clicks ❌) -->
+          <div class="feedback-correction" id="feedback-correction" hidden>
+            <p class="correction-label">What is it actually? Search below:</p>
+            <div class="correction-input-wrap">
+              <input type="text" id="correction-input" class="correction-input" placeholder="e.g. plastic bag, glass bottle…" autocomplete="off" />
+              <button class="btn btn-primary btn-sm" id="correction-submit">Save Correction</button>
+            </div>
+            <ul class="correction-suggestions" id="correction-suggestions" hidden></ul>
           </div>
 
           <div class="result-tips">
