@@ -407,7 +407,11 @@ async function classifyWithMobileNet(imgEl, onProgress) {
 async function classifyImage(imgEl, onProgress) {
   const apiKey = getGeminiApiKey();
 
-  if (apiKey) {
+  // Skip Gemini if it recently failed (cooldown prevents hammering a broken key)
+  const cooldownUntil = window._geminiCooldownUntil || 0;
+  const canUseGemini  = apiKey && Date.now() > cooldownUntil;
+
+  if (canUseGemini) {
     try {
       const result = await classifyWithGemini(imgEl, apiKey, onProgress);
       if (result) return result;
@@ -415,17 +419,22 @@ async function classifyImage(imgEl, onProgress) {
       return { wasteItem: null, topClass: 'Not identified', confidence: 0, noMatch: true, source: 'gemini' };
     } catch (err) {
       const code = err.message;
+      // Set a 60-second cooldown so we don't keep hammering a broken endpoint
+      window._geminiCooldownUntil = Date.now() + 60000;
+
       if (code === 'GEMINI_BAD_KEY') {
-        onProgress?.('⚠️ Invalid API key — switching to offline mode…');
-        clearGeminiApiKey(); // Remove bad key so user sees the setup prompt again
+        onProgress?.('⚠️ API key error — using offline mode for 60s…');
       } else if (code === 'GEMINI_QUOTA') {
-        onProgress?.('⚠️ API quota reached — switching to offline mode…');
+        onProgress?.('⚠️ API quota reached — using offline mode for 60s…');
       } else {
-        onProgress?.('⚠️ Gemini unavailable — switching to offline mode…');
+        onProgress?.('⚠️ Gemini unavailable — using offline mode…');
       }
-      // Fall through to MobileNet
+      console.warn('EcoSort: Gemini failed with', code, '— cooling down 60s');
       await sleep(800);
     }
+  } else if (apiKey && Date.now() <= cooldownUntil) {
+    onProgress?.('Gemini on cooldown — using offline mode…');
+    await sleep(300);
   }
 
   // Offline MobileNet fallback
