@@ -389,7 +389,7 @@ function showResults(item, confidence, method, geminiItemName = null, result = n
   setText('credits-total-display', state.ecoCredits);
 
   // Show Gemini reasoning if available
-  showReasoning(result?.reasoning || null, method);
+  showReasoning(result?.reasoning || null);
 
   // Reset feedback UI
   initFeedback(displayName, item);
@@ -434,11 +434,11 @@ function setText(id, val) {
 /* ────────────────────────────────────────────────────────────
    AI REASONING DISPLAY
    ──────────────────────────────────────────────────────────── */
-function showReasoning(reasoning, method) {
+function showReasoning(reasoning) {
   const wrap = document.getElementById('result-reasoning');
   const text = document.getElementById('reasoning-text');
   if (!wrap || !text) return;
-  if (reasoning && method === 'ml') {
+  if (reasoning) {
     text.textContent = reasoning;
     wrap.hidden = false;
   } else {
